@@ -14,6 +14,7 @@ use ComBank\Transactions\WithdrawTransaction;
 use ComBank\Exceptions\BankAccountException;
 use ComBank\Exceptions\FailedTransactionException;
 use ComBank\Exceptions\ZeroAmountException;
+use ComBank\Exceptions\InvalidArgsException;
 
 require_once 'bootstrap.php';
 
@@ -105,4 +106,24 @@ try {
     $bankAccount2->closeAccount();
 } catch (BankAccountException $e) {
     pl($e->getMessage());
+}
+
+//---[Bank account 3]---/
+pl('--------- [Start testing bank account #3, Email validation] --------');
+try {
+    // create a new account3 with a valid email
+    $bankAccount3 = new BankAccount(300.0, 'john.smith@example.com');
+    pl('Account created successfully.');
+    pl('My balance: ' . $bankAccount3->getBalance());
+    pl('My email: ' . $bankAccount3->getEmail());
+} catch (InvalidArgsException $e) {
+    pl('Account creation rejected: ' . $e->getMessage());
+}
+
+try {
+    // create a new account with an invalid email
+    $invalidAccount = new BankAccount(300.0, 'johnexample.com');
+    pl('Account created successfully.');
+} catch (InvalidArgsException $e) {
+    pl('Account creation rejected due to an invalid email format: ' . $e->getMessage());
 }
