@@ -26,9 +26,13 @@ class BankAccount implements BankAccountInterface
     private float $balance;
     private bool $status;
     private OverdraftInterface $overdraft;
+    private string $email = '';
 
-    public function __construct(float $balance)
+    public function __construct(float $balance, string $email = '')
     {
+        if ($email !== '') {
+            $this->setEmail($email);
+        }
         $this->balance = $balance;
         $this->status = true;
         $this->overdraft = new NoOverdraft();
@@ -104,5 +108,16 @@ class BankAccount implements BankAccountInterface
     public function applyOverdraft(OverdraftInterface $overdraft)
     {
         $this->setOverdraft($overdraft);
+    }
+
+    public function getEmail(): string
+    {
+        return $this->email;
+    }
+
+    public function setEmail(string $email)
+    {
+        $this->validateEmail($email);
+        $this->email = $email;
     }
 }
