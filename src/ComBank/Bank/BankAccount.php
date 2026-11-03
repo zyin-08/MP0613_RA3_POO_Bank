@@ -28,9 +28,9 @@ class BankAccount implements BankAccountInterface
     private OverdraftInterface $overdraft;
     private string $email = '';
 
-    public function __construct(float $balance, string $email = '')
+    public function __construct(float $balance, $email = null)
     {
-        if ($email !== '') {
+        if ($email !== null) {
             $this->setEmail($email);
         }
         $this->balance = $balance;
@@ -48,7 +48,7 @@ class BankAccount implements BankAccountInterface
         try {
             $newBalance = $transaction->applyTransaction($this);
         } catch (InvalidOverdraftFundsException $e) {
-            throw new FailedTransactionException("Insufficient balance to complete the transaction", 0, $e);
+            throw new FailedTransactionException("Insufficient balance to complete the transaction");
         }
 
         $this->setBalance($newBalance);

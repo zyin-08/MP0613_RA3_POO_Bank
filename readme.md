@@ -12,6 +12,8 @@
 4. Withdraw funds
 5. Display balance
 6. Close account
+7. Validate account email
+8. Apply interest based on overdraft strategy
 
 #### Installation
 ```
@@ -43,12 +45,15 @@ classDiagram
     BankAccountInterface <|.. BankAccount :implements
     OverdraftInterface <|.. NoOverdraft :implements
     OverdraftInterface <|.. SilverOverdraft :implements
+    OverdraftInterface <|.. GoldOverdraft :implements
     BankTransactionInterface <|.. DepositTransaction :implements
     BankTransactionInterface <|.. WithdrawTransaction :implements
+    BankTransactionInterface <|.. InterestTransaction :implements
     <<interface>> BankAccountInterface    
     <<interface>> OverdraftInterface 
     BaseTransaction <|-- DepositTransaction :extends
     BaseTransaction <|-- WithdrawTransaction :extends
+    BaseTransaction <|-- InterestTransaction :extends
     BankAccount --> OverdraftInterface : use
     BankAccount --> BankTransactionInterface : use
     <<interface>> BankTransactionInterface    
@@ -61,6 +66,7 @@ classDiagram
 	  -balance
 	  -status
       -overdraft
+      -email
       +transaction(BankTransactionInterface) void
       +isOpen() bool
       +reopenAccount() void
@@ -69,6 +75,8 @@ classDiagram
       +getOverdraft() OverdraftInterface
       +applyOverdraft(OverdraftInterface) void
       +setBalance(float) void
+      +getEmail() string
+      +setEmail(string) void
     } 
 
     class BankAccountInterface{
@@ -80,24 +88,35 @@ classDiagram
       +getOverdraft() OverdraftInterface
       +applyOverdraft(OverdraftInterface) void
       +setBalance(float) void
+      +getEmail() string
+      +setEmail(string) void
     } 
 
     class OverdraftInterface{
       +isGrantOverdraftFunds(float) bool
       +getOverdraftFundsAmount() float     
+      +getInterestRate() int     
     } 
 
     class SilverOverdraft{
       +isGrantOverdraftFunds(float) bool
       +getOverdraftFundsAmount() float     
+      +getInterestRate() int     
     } 
     class NoOverdraft{
       +isGrantOverdraftFunds(float) bool
       +getOverdraftFundsAmount() float     
+      +getInterestRate() int     
+    } 
+    class GoldOverdraft{
+      +isGrantOverdraftFunds(float) bool
+      +getOverdraftFundsAmount() float     
+      +getInterestRate() int     
     } 
 
     class AmountValidationTrait{
       +validateAmount(float) void    
+      -validateEmail(string) void    
     } 
 
     class BaseTransaction{
@@ -115,6 +134,11 @@ classDiagram
       +getAmount() float    
     } 
     class WithdrawTransaction{
+      +applyTransaction(BankAccountInterface) float    
+      +getTransactionInfo() string    
+      +getAmount() float    
+    } 
+    class InterestTransaction{
       +applyTransaction(BankAccountInterface) float    
       +getTransactionInfo() string    
       +getAmount() float    
