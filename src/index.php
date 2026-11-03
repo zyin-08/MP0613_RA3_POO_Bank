@@ -9,7 +9,9 @@
 
 use ComBank\Bank\BankAccount;
 use ComBank\OverdraftStrategy\SilverOverdraft;
+use ComBank\OverdraftStrategy\GoldOverdraft;
 use ComBank\Transactions\DepositTransaction;
+use ComBank\Transactions\InterestTransaction;
 use ComBank\Transactions\WithdrawTransaction;
 use ComBank\Exceptions\BankAccountException;
 use ComBank\Exceptions\FailedTransactionException;
@@ -111,7 +113,6 @@ try {
 //---[Bank account 3]---/
 pl('--------- [Start testing bank account #3, Email validation] --------');
 try {
-    // create a new account3 with a valid email
     $bankAccount3 = new BankAccount(300.0, 'john.smith@example.com');
     pl('Account created successfully.');
     pl('My balance: ' . $bankAccount3->getBalance());
@@ -121,9 +122,32 @@ try {
 }
 
 try {
-    // create a new account with an invalid email
     $invalidAccount = new BankAccount(300.0, 'johnexample.com');
     pl('Account created successfully.');
 } catch (InvalidArgsException $e) {
     pl('Account creation rejected due to an invalid email format: ' . $e->getMessage());
+}
+
+pl('--------- [Start testing bank account #4, Interest transaction] --------');
+try {
+    $bankAccount4 = new BankAccount(1000.0);
+    pl('Doing interest transaction (No overdraft, 1%) with current balance ' . $bankAccount4->getBalance());
+    $bankAccount4->transaction(new InterestTransaction($bankAccount4));
+    pl('My new balance after interest : ' . $bankAccount4->getBalance());
+
+    $bankAccount5 = new BankAccount(1000.0);
+    $bankAccount5->applyOverdraft(new SilverOverdraft());
+    pl('Doing interest transaction (Silver overdraft, 5%) with current balance ' . $bankAccount5->getBalance());
+    $bankAccount5->transaction(new InterestTransaction($bankAccount5));
+    pl('My new balance after interest : ' . $bankAccount5->getBalance());
+
+    $bankAccount6 = new BankAccount(1000.0);
+    $bankAccount6->applyOverdraft(new GoldOverdraft());
+    pl('Doing interest transaction (Gold overdraft, 10%) with current balance ' . $bankAccount6->getBalance());
+    $bankAccount6->transaction(new InterestTransaction($bankAccount6));
+    pl('My new balance after interest : ' . $bankAccount6->getBalance());
+} catch (ZeroAmountException $e) {
+    pl($e->getMessage());
+} catch (FailedTransactionException $e) {
+    pl('Error transaction: ' . $e->getMessage());
 }
