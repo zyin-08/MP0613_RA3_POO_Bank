@@ -7,6 +7,7 @@
  * Time: 7:24 PM
  */
 
+use ComBank\Transactions;
 use ComBank\Bank\BankAccount;
 use ComBank\OverdraftStrategy\SilverOverdraft;
 use ComBank\OverdraftStrategy\GoldOverdraft;
@@ -17,6 +18,7 @@ use ComBank\Exceptions\BankAccountException;
 use ComBank\Exceptions\FailedTransactionException;
 use ComBank\Exceptions\ZeroAmountException;
 use ComBank\Exceptions\InvalidArgsException;
+use ComBank\Transactions\TransferTransaction;
 
 require_once 'bootstrap.php';
 
@@ -164,6 +166,36 @@ try {
     // 1000 * 10 / 100 = 100 -> saldo 1100
     $bankAccount6->transaction(new InterestTransaction($bankAccount6));
     pl('My new balance after interest : ' . $bankAccount6->getBalance());
+} catch (ZeroAmountException $e) {
+    pl($e->getMessage());
+} catch (FailedTransactionException $e) {
+    pl('Error transaction: ' . $e->getMessage());
+}
+
+
+pl('--------- [Start testing bank account #7, Transfer transaction] --------');
+try {
+    $bankAccount7 = new BankAccount(500.0);
+    $bankAccount8 = new BankAccount(200.0);
+    pl('Transfer amount: 100.00€');
+    $bankAccount7->transaction(new TransferTransaction(100.0, $bankAccount8));
+    pl('Source balance after transaction ' . $bankAccount7->getBalance());
+    pl('Destination balance after apply transaction' . $bankAccount8->getBalance());
+} catch (ZeroAmountException $e) {
+    pl($e->getMessage());
+} catch (FailedTransactionException $e) {
+    pl('Error transaction: ' . $e->getMessage());
+}
+
+
+try {
+    $bankAccount9 = new BankAccount(50.0);
+    $bankAccount10 = new BankAccount(200.0);
+    pl('Transfer amount: 100.00€');
+    $bankAccount9->transaction(new TransferTransaction(100.0, $bankAccount10));
+    pl('Source balance after transaction ' . $bankAccount7->getBalance());
+    pl('Destination balance after apply transaction' . $bankAccount8->getBalance());
+    
 } catch (ZeroAmountException $e) {
     pl($e->getMessage());
 } catch (FailedTransactionException $e) {
