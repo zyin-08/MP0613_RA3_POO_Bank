@@ -7,6 +7,7 @@
  * Time: 11:33 AM
  */
 
+// Clase padre de las excepciones del banco. Es abstracta: solo se instancian sus hijas
 abstract class BaseExceptions extends \Exception
 {
     protected $errorCode = 0;

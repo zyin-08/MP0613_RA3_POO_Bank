@@ -7,6 +7,7 @@
  * Time: 2:20 PM
  */
 
+// Transacción fallida por falta de saldo. La lanza BankAccount::transaction()
 class FailedTransactionException extends BaseExceptions
 {
     protected $errorCode = 401;

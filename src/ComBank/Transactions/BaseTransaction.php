@@ -16,6 +16,7 @@ abstract class BaseTransaction
 {
     use AmountValidationTrait;
 
+    // Cantidad de dinero que mueve la transacción (no confundir con el saldo de la cuenta)
     protected float $amount;
 
     public function __construct(float $amount)

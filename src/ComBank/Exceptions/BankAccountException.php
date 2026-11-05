@@ -7,6 +7,7 @@
  * Time: 2:29 PM
  */
 
+// Operación no permitida por el estado de la cuenta (cerrada, ya abierta...)
 class BankAccountException extends BaseExceptions
 {
     protected $errorCode = 500;

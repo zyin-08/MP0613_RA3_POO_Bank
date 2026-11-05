@@ -15,6 +15,7 @@ use ComBank\Transactions\Contracts\BankTransactionInterface;
 
 interface BankAccountInterface
 {
+    // Definidas pero sin usar: BankAccount guarda el estado como bool
     const STATUS_OPEN = 'OPEN';
     const STATUS_CLOSED = 'CLOSED';
 

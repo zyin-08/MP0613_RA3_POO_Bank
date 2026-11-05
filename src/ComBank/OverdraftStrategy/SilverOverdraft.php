@@ -10,11 +10,13 @@ use ComBank\OverdraftStrategy\Contracts\OverdraftInterface;
  * Time: 1:39 PM
  */
 
+// Descubierto Silver: el saldo puede llegar hasta -100. Interés del 5%
 /**
  * @description: Grant 100.00 overdraft funds.
  * */
 class SilverOverdraft implements OverdraftInterface
 {
+    // Saldo resultante -80 -> 100 + (-80) = 20, mayor o igual que 0: se permite
     public function isGrantOverdraftFunds(float $overdraft): bool
     {
         return $this->getOverdraftFundsAmount() + $overdraft >= 0;

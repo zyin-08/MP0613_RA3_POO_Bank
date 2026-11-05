@@ -7,6 +7,7 @@
  * Time: 1:31 PM
  */
 
+// La retirada supera el límite. La lanza WithdrawTransaction y la captura BankAccount
 class InvalidOverdraftFundsException extends BaseExceptions
 {
     protected $errorCode = 200;

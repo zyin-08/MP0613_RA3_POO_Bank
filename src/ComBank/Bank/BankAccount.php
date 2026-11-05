@@ -19,8 +19,10 @@ use ComBank\OverdraftStrategy\Contracts\OverdraftInterface;
 use ComBank\Support\Traits\AmountValidationTrait;
 use ComBank\Transactions\Contracts\BankTransactionInterface;
 
+// Cuenta bancaria: guarda el saldo, el estado y el descubierto, y ejecuta las transacciones
 class BankAccount implements BankAccountInterface
 {
+    // Trait: añade a esta clase validateAmount() y validateEmail() sin usar herencia
     use AmountValidationTrait;
 
     private float $balance;
@@ -28,8 +30,10 @@ class BankAccount implements BankAccountInterface
     private OverdraftInterface $overdraft;
     private string $email = '';
 
+    // Constructor: el email es opcional. Toda cuenta nace abierta y sin descubierto
     public function __construct(float $balance, $email = null)
     {
+        // Si el email no es válido se lanza una excepción y la cuenta no se crea
         if ($email !== null) {
             $this->setEmail($email);
         }
@@ -38,19 +42,25 @@ class BankAccount implements BankAccountInterface
         $this->overdraft = new NoOverdraft();
     }
 
+    // Método central: acepta cualquier transacción gracias a la interfaz
     public function transaction(BankTransactionInterface $transaction)
     {
+        // 1. Una cuenta cerrada no admite transacciones
         if (!$this->status) {
             throw new BankAccountException("Cannot perform transactions on a closed account");
         }
+        // 2. La cantidad debe ser mayor que 0
         $this->validateAmount($transaction->getAmount());
 
+        // 3. La transacción calcula el nuevo saldo; la cuenta todavía no cambia
         try {
             $newBalance = $transaction->applyTransaction($this);
         } catch (InvalidOverdraftFundsException $e) {
+            // Convierte el error interno en uno general. El saldo no se ha tocado
             throw new FailedTransactionException("Insufficient balance to complete the transaction");
         }
 
+        // 4. Solo se guarda el saldo si todo ha ido bien
         $this->setBalance($newBalance);
     }
 
@@ -105,6 +115,7 @@ class BankAccount implements BankAccountInterface
         $this->overdraft = $overdraft;
     }
 
+    // Cambia la estrategia de descubierto. Es el método público definido en la interfaz
     public function applyOverdraft(OverdraftInterface $overdraft)
     {
         $this->setOverdraft($overdraft);
@@ -115,6 +126,7 @@ class BankAccount implements BankAccountInterface
         return $this->email;
     }
 
+    // Valida el formato antes de guardar; si es incorrecto lanza InvalidArgsException
     public function setEmail(string $email)
     {
         $this->validateEmail($email);

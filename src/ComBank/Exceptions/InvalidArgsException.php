@@ -7,6 +7,7 @@
  * Time: 11:34 AM
  */
 
+// Argumento incorrecto, por ejemplo un email con formato no válido
 class InvalidArgsException extends BaseExceptions
 {
     protected $errorCode = 100;
