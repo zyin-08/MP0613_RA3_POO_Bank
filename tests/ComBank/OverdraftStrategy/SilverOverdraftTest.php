@@ -26,7 +26,7 @@ class SilverOverdraftTest extends TestCase
     /**
      * @return array;
      * */
-    public static function newAmountsProvider()
+    public function newAmountsProvider()
     {
         return [
             [50,true],

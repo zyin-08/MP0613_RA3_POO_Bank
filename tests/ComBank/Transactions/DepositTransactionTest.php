@@ -56,7 +56,7 @@ class DepositTransactionTest extends TestCase
     /**
      * @return array;
      * */
-    public static function invalidAmountProvider()
+    public function invalidAmountProvider()
     {
         return [
             [-100],   // Negative value
