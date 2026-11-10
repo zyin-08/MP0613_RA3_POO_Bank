@@ -26,7 +26,7 @@ class NoOverdraftTest extends TestCase
     /**
      * @return array;
      * */
-    public function newAmountsProvider()
+    public static function newAmountsProvider()
     {
         return [
             [-1,false],
