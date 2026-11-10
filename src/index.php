@@ -189,6 +189,7 @@ try {
 pl('Source balance after transfer : ' . $bankAccount7->getBalance());
 pl('Destination balance after transfer : ' . $bankAccount8->getBalance());
 
+pl('--------- [Start testing bank account #9, Transfer transaction KO (insufficient balance)] --------');
 $bankAccount9 = new BankAccount(50.0);
 $bankAccount10 = new BankAccount(200.0);
 try {
