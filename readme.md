@@ -14,6 +14,7 @@
 6. Close account
 7. Validate account email
 8. Apply interest based on overdraft strategy
+9. Transfer funds between accounts
 
 #### Installation
 ```
@@ -49,11 +50,13 @@ classDiagram
     BankTransactionInterface <|.. DepositTransaction :implements
     BankTransactionInterface <|.. WithdrawTransaction :implements
     BankTransactionInterface <|.. InterestTransaction :implements
+    BankTransactionInterface <|.. TransferTransaction :implements
     <<interface>> BankAccountInterface    
     <<interface>> OverdraftInterface 
     BaseTransaction <|-- DepositTransaction :extends
     BaseTransaction <|-- WithdrawTransaction :extends
     BaseTransaction <|-- InterestTransaction :extends
+    BaseTransaction <|-- TransferTransaction :extends
     BankAccount --> OverdraftInterface : use
     BankAccount --> BankTransactionInterface : use
     <<interface>> BankTransactionInterface    
@@ -142,6 +145,14 @@ classDiagram
       +applyTransaction(BankAccountInterface) float    
       +getTransactionInfo() string    
       +getAmount() float    
+    } 
+    class TransferTransaction{
+      -destinationAccount
+      +applyTransaction(BankAccountInterface) float    
+      +getTransactionInfo() string    
+      +getAmount() float    
+      +setDestinationAccount(BankAccountInterface) void    
+      +getDestinationAccount() BankAccountInterface    
     } 
 ```
 
