@@ -7,7 +7,7 @@
  * Time: 11:38 AM
  */
 
-// La cantidad es 0, negativa o no finita (NAN, INF)
+// La cantidad es 0 o negativa
 class ZeroAmountException extends BaseExceptions
 {
     protected $errorCode = 101;

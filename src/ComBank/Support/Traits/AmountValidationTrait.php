@@ -21,9 +21,9 @@ trait AmountValidationTrait
      */
     public function validateAmount(float $amount): void
     {
-        // El 0, los negativos y los valores no finitos (NAN, INF) no son válidos
-        if (!is_finite($amount) || $amount <= 0.0) {
-            throw new ZeroAmountException("The amount must be a finite number greater than zero");
+        // El 0 y los negativos no son válidos
+        if ($amount <= 0.0) {
+            throw new ZeroAmountException("The amount must be greater than zero");
         }
     }
 

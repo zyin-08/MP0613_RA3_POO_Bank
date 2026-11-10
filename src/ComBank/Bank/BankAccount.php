@@ -49,11 +49,10 @@ class BankAccount implements BankAccountInterface
         if (!$this->status) {
             throw new BankAccountException("Cannot perform transactions on a closed account");
         }
-        // 2. La cantidad debe ser un número finito mayor que 0
+        // 2. La cantidad debe ser mayor que 0
         $this->validateAmount($transaction->getAmount());
 
-        // 3. La transacción calcula el nuevo saldo. Esta cuenta solo cambia aquí si es una
-        //    transferencia, que mueve el dinero de las dos cuentas a la vez
+        // 3. La transacción calcula el nuevo saldo; la cuenta todavía no cambia
         try {
             $newBalance = $transaction->applyTransaction($this);
         } catch (InvalidOverdraftFundsException $e) {

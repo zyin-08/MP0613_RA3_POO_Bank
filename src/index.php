@@ -7,17 +7,18 @@
  * Time: 7:24 PM
  */
 
+use ComBank\Transactions;
 use ComBank\Bank\BankAccount;
 use ComBank\OverdraftStrategy\SilverOverdraft;
 use ComBank\OverdraftStrategy\GoldOverdraft;
 use ComBank\Transactions\DepositTransaction;
 use ComBank\Transactions\InterestTransaction;
-use ComBank\Transactions\TransferTransaction;
 use ComBank\Transactions\WithdrawTransaction;
 use ComBank\Exceptions\BankAccountException;
 use ComBank\Exceptions\FailedTransactionException;
 use ComBank\Exceptions\ZeroAmountException;
 use ComBank\Exceptions\InvalidArgsException;
+use ComBank\Transactions\TransferTransaction;
 
 require_once 'bootstrap.php';
 
@@ -173,22 +174,21 @@ try {
 
 
 pl('--------- [Start testing bank account #7, Transfer transaction] --------');
-$bankAccount7 = new BankAccount(500.0);
-$bankAccount8 = new BankAccount(200.0);
 try {
-    pl('Doing transfer (100) with source balance ' . $bankAccount7->getBalance() . ' and destination balance ' . $bankAccount8->getBalance());
-    // Origen 500 - 100 = 400, destino 200 + 100 = 300
+    $bankAccount7 = new BankAccount(500.0);
+    $bankAccount8 = new BankAccount(200.0);
+    pl('Transfer amount: 100.00€');
     $bankAccount7->transaction(new TransferTransaction(100.0, $bankAccount8));
+    pl('Source balance after transaction ' . $bankAccount7->getBalance());
+    pl('Destination balance after apply transaction' . $bankAccount8->getBalance());
 } catch (ZeroAmountException $e) {
-    pl($e->getMessage());
-} catch (BankAccountException $e) {
     pl($e->getMessage());
 } catch (FailedTransactionException $e) {
     pl('Error transaction: ' . $e->getMessage());
 }
-pl('Source balance after transfer : ' . $bankAccount7->getBalance());
-pl('Destination balance after transfer : ' . $bankAccount8->getBalance());
 
+
+pl('--------- [Start testing bank account #9, Transfer transaction KO (insufficient balance)] --------');
 $bankAccount9 = new BankAccount(50.0);
 $bankAccount10 = new BankAccount(200.0);
 try {
@@ -197,20 +197,9 @@ try {
     $bankAccount9->transaction(new TransferTransaction(100.0, $bankAccount10));
 } catch (ZeroAmountException $e) {
     pl($e->getMessage());
-} catch (BankAccountException $e) {
-    pl($e->getMessage());
 } catch (FailedTransactionException $e) {
     pl('Error transaction: ' . $e->getMessage());
 }
+// Fuera del try para que se muestren también cuando la transferencia falla
 pl('Source balance after failed transfer : ' . $bankAccount9->getBalance());
 pl('Destination balance after failed transfer : ' . $bankAccount10->getBalance());
-
-$bankAccount11 = new BankAccount(500.0);
-try {
-    pl('Doing transfer (100) to the same account with balance ' . $bankAccount11->getBalance());
-    // Origen y destino iguales: se rechaza con InvalidArgsException y el saldo no cambia
-    $bankAccount11->transaction(new TransferTransaction(100.0, $bankAccount11));
-} catch (InvalidArgsException $e) {
-    pl('Transfer rejected: ' . $e->getMessage());
-}
-pl('Balance after rejected transfer : ' . $bankAccount11->getBalance());
