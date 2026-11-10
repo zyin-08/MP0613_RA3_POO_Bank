@@ -188,16 +188,18 @@ try {
 }
 
 
+pl('--------- [Start testing bank account #9, Transfer transaction KO (insufficient balance)] --------');
+$bankAccount9 = new BankAccount(50.0);
+$bankAccount10 = new BankAccount(200.0);
 try {
-    $bankAccount9 = new BankAccount(50.0);
-    $bankAccount10 = new BankAccount(200.0);
-    pl('Transfer amount: 100.00€');
+    pl('Doing transfer (100) with source balance ' . $bankAccount9->getBalance() . ' and destination balance ' . $bankAccount10->getBalance());
+    // 50 - 100 = -50: sin descubierto se rechaza y ningún saldo cambia
     $bankAccount9->transaction(new TransferTransaction(100.0, $bankAccount10));
-    pl('Source balance after transaction ' . $bankAccount7->getBalance());
-    pl('Destination balance after apply transaction' . $bankAccount8->getBalance());
-    
 } catch (ZeroAmountException $e) {
     pl($e->getMessage());
 } catch (FailedTransactionException $e) {
     pl('Error transaction: ' . $e->getMessage());
 }
+// Fuera del try para que se muestren también cuando la transferencia falla
+pl('Source balance after failed transfer : ' . $bankAccount9->getBalance());
+pl('Destination balance after failed transfer : ' . $bankAccount10->getBalance());
